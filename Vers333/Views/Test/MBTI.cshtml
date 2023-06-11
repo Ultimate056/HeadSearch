@@ -1,0 +1,200 @@
+﻿@using webapi.Models.Tests;
+@model TestsApi.Models.ViewModels.TestViewModel
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <title>Прохождение MBTI теста</title>
+    <link rel="stylesheet" type="text/css" href="/css/headfoot.css" />
+    <link rel="stylesheet" type="text/css" href="/css/mbti.css" />
+</head>
+<body>
+    <div class="header">
+        <div class="header_content">
+            <div class="logo">
+                <div class="logo_content">
+                    <button id="logoButton" height="70%" width="70%">
+                    </button>
+                </div>
+            </div>
+            <div class="menu">
+                <div class="companyContacts">
+                    <span>
+                        <img src="/assets/phone.png" />
+                    </span>
+                    <div class="text_contacts">
+                        <b>+7 (920) 401-70-77</b>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="desc">
+        <div class="desc_container">
+          <div class="desc_content">
+            <div class="desc_img">
+              <img src="/assets/mbti.png" style="height: 600px; width: auto;"/>
+            </div>
+            <div class="desc_text">
+              <h1>Тест MBTI</h1>
+              <hr>
+              <h2>16 типов личности</h2><br>
+              <input type="button" style="background: green; color: white" id="StartTestBtn" value="Начать"/>
+            </div>
+          </div>
+        </div>
+    </div>
+
+    <div class="main_content">
+        <div class="main_container">
+            <div class="mbti_content">
+                <h2>Тест MBTI</h2>
+                <div class="header_mbti_content">
+                    <input type="text" readonly id="number_q" name="num_q" value="" />
+                    <input type="text" readonly id="name_q" name="name_q" value="" />
+                </div>
+                <hr />
+                <div class="answers_mbti_container" style="width: 1000px; height: auto; display: block">
+                    <p><input type="button" id="ans1" name="ans1" value="" /></p>
+                    <p><input type="button" id="ans2" name="ans2" value="" /></p>
+                    <p><input type="button" id="ans3" name="ans3" value="" /></p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="footer">
+        <div class="footer_container">
+            <div class="logo_footer">
+                <img src="/assets/logo.png" width="100%" height="100%" />
+            </div>
+            <div class="text_container_footer" width="auto" height="150px">
+            </div>
+            <div class="contacts_container_footer">
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById("logoButton").addEventListener("click", async () => {
+            window.location.href = '/';
+        });
+
+        document.getElementById("StartTestBtn").addEventListener("click", async () => {
+            const response = await fetch(`https://localhost:7281/test/InitResultMbti/${id_test}`, {
+                method: "GET",
+                headers: { "Accept": "application/json" }
+            });
+            if (response.ok === true) {
+                id_res = await response.json().then(x=> x.id);
+                console.log(`id res : ${id_res}`);
+
+                NextQuest();
+                
+            }
+        });
+
+        var counterQ = 0;
+        var counterA = 0;
+        var tvm;
+        let id_test = 0;
+        let id_res = 0;
+        var new_tvm = [];
+        var counter = 0;
+        var countQuest;
+
+
+
+        function NextQuest() {
+
+            let nextQuest = tvm.questions[counterQ];
+
+            let AnswersForQuest = tvm.allAnswers.filter(x => x.questionId == nextQuest.id);
+
+            UpdateQuest(nextQuest, AnswersForQuest);
+        }
+
+
+
+
+        async function getTest(id) {
+            const response = await fetch(`https://localhost:7281/test/GetDataTest/${id}`, {
+                method: "GET",
+                headers: { "Accept": "application/json" }
+            });
+            if (response.ok === true) {
+                tvm = await response.json();
+                console.log(tvm);
+
+                countQuest = tvm.questions.length;
+                console.log("countQuest: " + countQuest);
+                id_test = tvm.test.id;
+                console.log(`idTest : ${id_test}`);
+            }
+        }
+        getTest(1);
+
+        async function FinalTest(nt) {
+
+            const response = await fetch(`https://localhost:7281/test/TestMBTI?idResult=${id_res}`, {
+                method: "POST",
+                headers: { "Accept": "application/json", "Content-Type": "application/json" },
+                body: JSON.stringify(nt)
+            });
+            if (response.ok === true) {
+                window.alert("Тест успешно пройден!");
+                
+                
+                window.location.replace("/test/GetPaieTest");
+            }
+        }
+
+        function UpdateQuest(nextQuest, AnswersForQuest) {
+            document.getElementById("number_q").value = `${counterQ + 1} / ${countQuest}`;
+
+            document.getElementById("name_q").value = nextQuest.content;
+
+            document.getElementById("ans1").value = AnswersForQuest[0].content;
+            document.getElementById("ans2").value = AnswersForQuest[1].content;
+            document.getElementById("ans3").value = AnswersForQuest[2].content;
+        }
+
+
+        let flagFinal = false;
+        // Добавляет ответ пользователя в список ответов пользователя
+        function AddUserAnswer(position) {
+            
+            if(counterQ < countQuest) {
+                let Answer = tvm.allAnswers.find(x => x.content == document.getElementById("ans1").value);
+                new_tvm.push(Answer);
+
+                console.log(new_tvm);
+
+                counterQ++;
+                if(counterQ >= countQuest) {
+                    flagFinal = true;
+                    FinalTest(new_tvm);
+                }
+                else
+                    NextQuest();
+            }
+            else {
+                flagFinal = true;
+                FinalTest(new_tvm);
+            }
+        }
+
+        document.getElementById("ans1").addEventListener("click", () => {
+            AddUserAnswer("ans1");
+
+        });
+        document.getElementById("ans2").addEventListener("click", () => {
+            AddUserAnswer("ans2");
+        });
+        document.getElementById("ans3").addEventListener("click", () => {
+            AddUserAnswer("ans3");
+        });
+    </script>
+</body>
+</html>

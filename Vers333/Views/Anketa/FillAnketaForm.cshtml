@@ -1,0 +1,143 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>Добро пожаловать</title>
+    <style>
+        * {
+            font-size: 18px;
+            font-family: Arial;
+        }
+
+        .content {
+            width: 800px;
+            position: absolute;
+            left: 42%;
+            margin-left: -200px;
+            margin-top: 100px;
+            border: thick double #32a1ce;
+            height: auto;
+        }
+
+        p {
+            margin-left: 5px;
+        }
+
+        h2 {
+            margin-left: 350px;
+            text-shadow: 2px 2px 4px rgba(179, 147, 211, 0.1), 3px 4px 4px rgba(179, 147, 211, 0.15), 4px 6px 4px rgba(179, 147, 211, 0.2), 5px 8px 4px rgba(179, 147, 211, 0.25);
+        }
+
+        #InputBtn {
+            margin-left: 250px;
+            border: 2px solid #32a1ce;
+        }
+
+        #BackToLogin {
+            border: 2px solid #d8c2ff;
+        }
+
+        img {
+            margin-left: 300px;
+            width: 25%;
+            height: 25%;
+        }
+
+        #DescQuest {
+            margin-top: 10px;
+            width: 738px;
+            height: auto;
+            color: #ce3fd9;
+            margin-left: 3px;
+            font-weight: bold;
+            border-style: none;
+            resize: none;
+            outline: 0;
+            display: inline-block;
+        }
+
+        .AnswClass {
+            width: 600px;
+            max-width: 600px;
+            height: 62px;
+            display: inline-block;
+            margin-left: 50px;
+            outline: 0;
+            border: 3px solid #1c87c9;
+            padding: 10px;
+            line-height: 20px;
+            background: #d0e2bc;
+            resize: none;
+        }
+
+    </style>
+</head>
+<body>
+    <div class="content">
+        <img src="/assets/logo.png" />
+        <h2>Введите анкету</h2>
+        <form method="post" asp-action="tests" asp-controller="test">
+            <p>
+                @{
+                    foreach (var quest in Model)
+                    {
+                        <label for="Answer" id="IdQuest" hidden>@quest.Id</label>
+                        <textarea name="DescQuest" id="DescQuest" readonly cols="50" rows="2">- @quest.Content</textarea>
+                        <br>
+                        <textarea name="Answer" id="@quest.Id" cols="50" rows="15" required class="AnswClass"></textarea>
+                    }
+                }
+
+            </p>
+            <p>
+                <input type="submit" value="Заполнить" id="InputBtn" /> | <input type="submit" value="Вернуться" id="BackToLogin" />
+            </p>
+
+
+
+        </form>
+
+
+    </div>
+
+
+    <script>
+        let answers= [];
+        document.getElementById("BackToLogin").addEventListener("click", async () => {
+            window.location.replace = '/';
+        });
+
+        document.getElementById("InputBtn").addEventListener("click", async () => {
+            var answForm = document.querySelectorAll(".AnswClass");
+
+            console.log(answForm);
+
+            for (let i = 0; i < answForm.length; i++) {
+                let Answer =  {
+                    Id: answForm[i].getAttribute("id"),
+                    Content: answForm[i].value
+                };
+                if(Answer.Content == "" || Answer.Content == null) {
+                    alert("Ответьте на все вопросы!");
+                    answers.length = 0;
+                    return;
+                }
+                answers.push(Answer);
+            }
+
+            console.log(answers);
+
+            const response = await fetch(`https://localhost:7281/anketa/AddAnswers`, {
+                method: "POST",
+                headers: { "Accept": "application/json", "Content-Type": "application/json" },
+                body: JSON.stringify(answers)
+            });
+            if (response.ok === true) {
+                alert("Спасибо. Теперь пройдем тесты");
+            }
+        });
+
+    </script>
+
+</body>
+</html>

@@ -1,0 +1,326 @@
+﻿
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <title>Прохождение PAIE теста</title>
+    <link rel="stylesheet" type="text/css" href="/css/headfoot.css" />
+    <link rel="stylesheet" type="text/css" href="/css/paie.css" />
+</head>
+<body>
+    <div class="header">
+        <div class="header_content">
+            <div class="logo">
+                <div class="logo_content">
+                    <button id="logoButton" height="70%" width="70%">
+                    </button>
+                </div>
+            </div>
+            <div class="menu">
+                <div class="companyContacts">
+                    <span>
+                        <img src="/assets/phone.png" />
+                    </span>
+                    <div class="text_contacts">
+                        <b>+7 (920) 401-70-77</b>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="desc">
+        <div class="desc_container">
+            <div class="desc_content">
+                <div class="desc_img">
+                    <img src="/assets/paie.png" style="height: 600px; width: 500px;" />
+                </div>
+                <div class="desc_text">
+                    <h1>Тест PAIE</h1>
+                    <hr>
+                    <h2>Оценить себя как руководителя</h2><br>
+                    <input type="button" style="background: green; color: white" id="StartTestBtn" value="Начать" />
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="main_content">
+        <div class="main_container">
+            <div class="mbti_content">
+                <h2>Тест PAIE</h2>
+                <span>Перед вами 10 блоков, содержащие по 4 качества личности. Присвойте каждому качеству от 1-го до 4-ех баллов в зависимости от того, насколько оно подходит именно вам. Общая сумма баллов одного блока должна быть равна 10.</span>
+                <hr />
+                <br />
+                 <h3 id="nGroup"></h3>
+                 <h3 id="SumBalls"></h3>
+                 <br />
+                <form method="post" asp-controller="Test" asp-action="GetViewResults" id="ff">
+                    <table>
+
+                        <thead>
+                            <tr>
+                                <th></th>
+                                <th>1</th>
+                                <th>2</th>
+                                <th>3</th>
+                                <th>4</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @{
+                                int i = 1;
+                                string nameGroup = "Group";
+                                while (i <= 4)
+                                {
+                                    nameGroup = "Group" + i;
+                                    var contentName = "Content" + nameGroup;
+                                    <tr>
+                                        <td id="@contentName"></td>
+                                        <td><input type="radio" value="1" name="@nameGroup" id="@nameGroup" onclick="updateScores()" /></td>
+                                        <td><input type="radio" value="2" name="@nameGroup" id="@nameGroup" onclick="updateScores()" /></td>
+                                        <td><input type="radio" value="3" name="@nameGroup" id="@nameGroup" onclick="updateScores()" /></td>
+                                        <td><input type="radio" value="4" name="@nameGroup" id="@nameGroup" onclick="updateScores()" /></td>
+                                    </tr>
+                                    i++;
+                                }
+                            }
+                        </tbody>
+                    </table>
+                    <input type="button" id="nextGroupBtn" value="Следующий блок >" disabled />
+                 </form>
+                
+            </div>
+        </div>
+    </div>
+
+    <div class="footer">
+        <div class="footer_container">
+            <div class="logo_footer">
+                <img src="/assets/logo.png" width="100%" height="100%" />
+            </div>
+            <div class="text_container_footer" width="auto" height="150px">
+            </div>
+            <div class="contacts_container_footer">
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById("logoButton").addEventListener("click", async () => {
+            window.location.href = '/';
+        });
+
+
+
+        async function getTest(id) {
+            const response = await fetch(`https://localhost:7281/test/GetDataTest/${id}`, {
+                method: "GET",
+                headers: { "Accept": "application/json" }
+            });
+            if (response.ok === true) {
+                tvm = await response.json();
+                console.log(tvm);
+
+                countQuest = tvm.questions.length;
+                console.log("countQuest: " + countQuest);
+                id_test = tvm.test.id;
+                console.log(`idTest : ${id_test}`);
+            }
+        }
+        getTest(2);
+
+
+        document.getElementById("StartTestBtn").addEventListener("click", async () => {
+            const response = await fetch(`https://localhost:7281/test/InitResultMbti/${id_test}`, {
+                method: "GET",
+                headers: { "Accept": "application/json" }
+            });
+            if (response.ok === true) {
+                id_res = await response.json().then(x => x.id);
+                console.log(`id res : ${id_res}`);
+
+                NextGroup();
+                document.getElementById("nextGroupBtn").disabled = false;
+            }
+        });
+
+        var counterQ = 0;
+        var tvm;
+        let id_test = 0;
+        let id_res = 0;
+        var countQuest;
+        let countPScores = 0;
+        let countAScores = 0;
+        let countEScores = 0;
+        let countIScores = 0;
+
+        let CurGroup;
+        let CurAnswersForGroup;
+
+        function NextGroup() {
+
+            if(counterQ == countQuest) {
+                document.getElementById("nextGroupBtn").disabled = true;
+                FinalTest();
+                return;
+            }
+            document.getElementById("SumBalls").innerText = "Баллов: 0";
+            CurSumBalls = 0;
+
+            ResetRadio(document.getElementsByName("Group1"));
+            ResetRadio(document.getElementsByName("Group2"));
+            ResetRadio(document.getElementsByName("Group3"));
+            ResetRadio(document.getElementsByName("Group4"));
+
+            let nextGroup = tvm.questions[counterQ];
+
+            let AnswersForGroup = tvm.allAnswers.filter(x => x.questionId == nextGroup.id);
+
+            CurGroup = nextGroup;
+            CurAnswersForGroup = AnswersForGroup;
+
+            UpdateQuest(nextGroup, AnswersForGroup);
+        }
+
+        function UpdateQuest(nextGroup, AnswersForQuest) {
+            document.getElementById("nGroup").innerText = nextGroup.content;
+
+
+            document.getElementById("ContentGroup1").innerText = AnswersForQuest[0].content;
+            document.getElementById("ContentGroup2").innerText = AnswersForQuest[1].content;
+            document.getElementById("ContentGroup3").innerText = AnswersForQuest[2].content;
+            document.getElementById("ContentGroup4").innerText = AnswersForQuest[3].content;
+        }
+
+
+
+        async function FinalTest() {
+            let scoresFinal = [];
+            scoresFinal.push(countPScores);
+            scoresFinal.push(countAScores);
+            scoresFinal.push(countEScores);
+            scoresFinal.push(countIScores);
+
+            console.log(scoresFinal);
+
+            const response = await fetch(`https://localhost:7281/test/FinalPaie?idResult=${id_res}`, {
+                method: "POST",
+                headers: { "Accept": "application/json", "Content-Type": "application/json" },
+                body: JSON.stringify(scoresFinal)
+            });
+
+            if(response.ok == true) {
+                document.getElementById("ff").submit();
+            }
+        }
+
+        function AddScore(answer, ball) {
+            switch(answer.scale) {
+                case 'P':
+                    countPScores += ball;
+                    break;
+                case 'A':
+                    countAScores += ball;
+                    break;
+                case 'E':
+                    countEScores += ball;
+                    break;
+                case 'I':
+                    countIScores += ball;
+                    break;
+            }
+        }
+
+
+        function getScore(groupRadio) {
+            for (var i = 0; i < groupRadio.length; i++) {
+                if (groupRadio[i].checked) {
+                    return groupRadio[i].value;
+                }
+            }
+        }
+
+        document.getElementById("nextGroupBtn").addEventListener("click", () => {
+
+            let score1 = getScore(document.getElementsByName("Group1"));
+            let score2 = getScore(document.getElementsByName("Group2"));
+            let score3 = getScore(document.getElementsByName("Group3"));
+            let score4 = getScore(document.getElementsByName("Group4"));
+
+            if (typeof score1 == "undefined") {
+                score1 = 0;
+            }
+            if (typeof score2 == "undefined") {
+                score2 = 0;
+            }
+            if (typeof score3 == "undefined") {
+                score3 = 0;
+            }
+            if (typeof score4 == "undefined") {
+                score4 = 0;
+            }
+            score1 = parseInt(score1);
+            score2 = parseInt(score2);
+            score3 = parseInt(score3);
+            score4 = parseInt(score4);
+
+            if(score1 == 0 || score2 == 0 || score3 == 0 || score4 == 0) {
+                alert("Баллы должны быть проставлены по всем характеристикам!");
+                return;
+            }
+
+            let sum = score1 + score2 + score3 + score4;
+            document.getElementById("SumBalls").innerText = "Баллов: " + sum;
+            
+            if(sum != 10) {
+                alert("Сумма баллов должна быть равна 10");
+                return;
+            }
+
+            AddScore(CurAnswersForGroup[0], score1);
+            AddScore(CurAnswersForGroup[1], score2);
+            AddScore(CurAnswersForGroup[2], score3);
+            AddScore(CurAnswersForGroup[3], score4);
+
+            counterQ++;
+            NextGroup();
+        });
+
+
+        function updateScores() {
+            let score1 = getScore(document.getElementsByName("Group1"));
+            let score2 = getScore(document.getElementsByName("Group2"));
+            let score3 = getScore(document.getElementsByName("Group3"));
+            let score4 = getScore(document.getElementsByName("Group4"));
+            
+            if(typeof score1 == "undefined") {
+                score1 = 0;
+            }
+            if (typeof score2 == "undefined") {
+                score2 = 0;
+            }
+            if(typeof score3 == "undefined") {
+                score3 = 0;
+            }
+            if (typeof score4 == "undefined") {
+                score4 = 0;
+            }
+            score1 = parseInt(score1);
+            score2 = parseInt(score2);
+            score3 = parseInt(score3);
+            score4 = parseInt(score4);
+
+            let sum = score1 + score2 + score3 + score4;
+            document.getElementById("SumBalls").innerText = "Баллов: " + sum;
+        }
+
+        function ResetRadio(groupRadio) {
+            for (var i = 0; i < groupRadio.length; i++) {
+                groupRadio[i].checked = false;
+            }
+        }
+    </script>
+</body>
+</html>
+

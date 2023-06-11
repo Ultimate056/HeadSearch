@@ -1,0 +1,81 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>Авторизация</title>
+    <style>
+        * {
+            font-size: 18px;
+            font-family: Arial;
+        }
+
+        .content {
+            width: 350px;
+            position: absolute;
+            left: 50%;
+            margin-left: -150px;
+            margin-top: 100px;
+            border: thick double #32a1ce;
+            height: 500px;
+        }
+
+        a {
+        }
+
+        h2 {
+            margin-left: 105px;
+            text-shadow: 2px 2px 4px rgba(179, 147, 211, 0.1), 
+            3px 4px 4px rgba(179, 147, 211, 0.15),
+            4px 6px 4px rgba(179, 147, 211, 0.2), 
+            5px 8px 4px rgba(179, 147, 211, 0.25);
+        }
+
+        p label {
+        }
+
+        p {
+            margin-left: 20px;
+        }
+
+        #inputBtn {
+            width: 100px;
+            margin-left: 100px;
+            border: 2px solid #32a1ce;
+        }
+
+        #inputBtn:hover {
+            background-color: green;
+        }
+    </style>
+</head>
+<body>
+    <div class="content">
+        <img src="assets/logo.png" />
+        <h2>Вход в систему</h2>
+        <div class="fields">
+            <form method="post" asp-action="SignIn" asp-controller="Main">
+                <p>
+                    <label for="Login">Почта:  </label>
+                    <input type="text" id="Login" placeholder="custom@mail.ru" required name="Login" />
+                </p>
+                <p>
+                    <label for="Login">Пароль: </label>
+                    <input type="password" id="Password" placeholder="Пароль" required name="Password" />
+                </p>
+                <p>
+                    @Html.ActionLink("Регистрация","Registration","Main")
+                </p>
+                <p>
+                    <input type="submit" value="Войти" id="inputBtn" />
+                </p>
+            </form>
+
+        </div>
+    </div>
+
+    <script>
+
+    </script>
+</body>
+</html>
+

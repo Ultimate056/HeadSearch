@@ -1,0 +1,121 @@
+﻿@using webapi.Models.Tests;
+@model Vers333.Models.ViewModels.UserAnswersData
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <title>Результаты теста</title>
+    <link rel="stylesheet" type="text/css" href="/css/headfoot.css" />
+    <link rel="stylesheet" type="text/css" href="/css/viee.css" />
+    <style>
+        #DescQuest {
+            margin-top: 10px;
+            width: 738px;
+            height: auto;
+            margin-left: 3px;
+            font-weight: bold;
+            border-style: none;
+            resize: none;
+            outline: 0;
+            display: inline-block;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="header_content">
+            <div class="logo">
+                <div class="logo_content">
+                    <button id="logoButton" height="70%" width="70%">
+                    </button>
+                </div>
+            </div>
+            <div class="menu">
+                <div class="companyContacts">
+                    <span>
+                        <img src="/assets/phone.png" />
+                    </span>
+                    <div class="text_contacts">
+                        <b>+7 (920) 401-70-77</b>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="desc">
+        <div class="desc_container">
+            <div class="desc_content">
+                <div class="desc_img">
+                    <div class="mbti_desc">
+                        <a href="@Model.UrlMBTI">
+                            <img src="/assets/viewmbti.jpg" style="height: 450px; width: auto;" />
+                        </a>
+                    </div>
+                    <div class="paie_desc">
+                        <button id="paieBtn" onclick="ShowElements()" />
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="main_content" id="hidClass">
+        <h1>Результаты PAIE теста</h1>
+        <br />
+        <h2> Производитель </h2>
+        <p>
+            <textarea name="DescQuest" id="DescQuest" readonly cols="50" rows="4" style="color:red">@Model.PAIEResults[0]</textarea>
+        </p>
+        <br />
+        <hr />
+
+        <h2> Администратор</h2>
+        <p>
+            <textarea name="DescQuest" id="DescQuest" readonly cols="50" rows="4" style="color:dodgerblue">@Model.PAIEResults[1]</textarea>
+        </p>
+        <br />
+        <hr />
+
+        <h2> Предприниматель </h2>
+        <p>
+            <textarea name="DescQuest" id="DescQuest" readonly cols="50" rows="4" style="color:darkorange">@Model.PAIEResults[2]</textarea>
+        </p>
+        <br />
+        <hr />
+
+        <h2> Интегратор </h2>
+        <p>
+            <textarea name="DescQuest" id="DescQuest" readonly cols="50" rows="4" style="color:green">@Model.PAIEResults[3]</textarea>
+        </p>
+        <br />
+        <hr />
+    </div>
+
+    <div class="footer">
+        <div class="footer_container">
+            <div class="logo_footer">
+                <img src="/assets/logo.png" width="100%" height="100%" />
+            </div>
+            <div class="text_container_footer" width="auto" height="150px">
+            </div>
+            <div class="contacts_container_footer">
+            </div>
+        </div>
+    </div>
+
+    <script>
+        alert("Спасибо за уделенное время! С вами свяжутся наши рекрутеры");
+        document.getElementById("logoButton").addEventListener("click", async () => {
+            window.location.href = '/';
+        });
+
+        function ShowElements() {
+            document.getElementById("hidClass").style.visibility = "visible";
+        }
+
+
+    </script>
+</body>
+</html>

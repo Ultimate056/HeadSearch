@@ -1,0 +1,107 @@
+﻿
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <title>Добро пожаловать</title>
+    <link rel="stylesheet" type="text/css" href="/css/headfoot.css" />
+    <link rel="stylesheet" type="text/css" href="/css/site.css" />
+
+    <style>
+
+        #StartTestBtn {
+            width: 200px;
+            border-radius: 10px; /* Уголки */
+            font-size: 18px;
+            margin-top: 10px;
+        }
+
+        #StartTestBtn:hover {
+            background-color: #F2ABED;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+      <div class="header_content">
+        <div class="logo">
+          <div class="logo_content">
+            <button id="logoButton" height="70%" width="70%">
+                  
+            </button>
+          </div>
+        </div>
+        <div class="menu">
+          <div class="companyContacts">
+                      <span>
+                          <img src="/assets/phone.png"/>
+                      </span>
+                    <div class="text_contacts">
+                        <b>+7 (920) 401-70-77</b>
+                    </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="desc">
+        <div class="desc_container">
+            <div class="desc_content">
+                <h1>Head Search - узнай свой потенциал</h1>
+                <h2>Кадровое агентство в поиске лучших специалистов </h2>
+                <h3>Наша компания занимается наймом персонала в управленческой сфере. Если вы претендуете на 
+                    должность директора, то вы обратились по адресу
+                </h3>
+            </div>
+        </div>
+    </div>
+    <div class="main_content">
+        <div class="main_container">
+            <div class="text_container">
+                <h1>Пройдите комплекс тестов</h1>
+                <hr>
+                <h2>Для лучшего понимания вас как кандидата, вам необходимо пройти тесты и заполнить анкету. </h2>
+            </div>
+            <div class="image_container">
+                <img src="/assets/persons.png" />
+                <form method="post" asp-action="OpenAnketa" asp-controller="Anketa">
+                    <label for="position">Выберите позицию</label>
+                    <select id="position" name="position" required autofocus>
+                        @{
+                            foreach(var item in Model)
+                            {
+                                <option value="@item.Id">@item.NamePosition</option>
+                            }
+                        }
+                    </select>
+                    <input type="submit" id="StartTestBtn" value="Пройти тесты" />
+                </form>
+
+            </div>
+        </div>
+    </div>
+
+    <div class="footer">
+      <div class="footer_container">
+        <div class="logo_footer">
+          <img src="/assets/logo.png" width="100%" height="100%"/>
+        </div>
+        <div class="text_container_footer" width="auto" height="150px">
+
+        </div>
+        <div class="contacts_container_footer">
+
+        </div>
+      </div>
+    </div>
+
+    <script>
+        document.getElementById("logoButton").addEventListener("click", async () => {
+            window.location.replace = '/';
+        });
+        //document.getElementById("StartTestBtn").addEventListener("click", async () => {
+        //    window.location.replace = '/Test/tests';
+        //});
+    </script>
+</body>
+</html>

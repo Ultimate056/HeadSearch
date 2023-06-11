@@ -1,0 +1,118 @@
+﻿/* desc  */
+.desc {
+    height: 600px;
+    width: 100%;
+    display: block;
+}
+
+.desc_container {
+    height: 100%;
+    width: 50%;
+    margin-left: 25%;
+}
+
+.desc_content {
+    text-align: left;
+}
+
+.desc_img {
+    width: 50%;
+    height: 100%;
+    display: block;
+    float: left;
+}
+
+.desc_text {
+    text-align: center;
+}
+
+
+.desc_content h1 {
+    padding-top: 10%;
+}
+
+.desc_content h2 {
+    padding-top: 3%;
+}
+
+.desc_content h3 {
+    padding-top: 5%;
+}
+
+
+/* main_content */
+.main_content {
+    height: 750px;
+    width: 100%;
+    display: block;
+    margin-top: 100px;
+}
+
+.main_container {
+    height: 100%;
+    width: 50%;
+    margin-left: 25%;
+    display: block;
+}
+
+
+.header_mbti_content {
+    width: 1000px;
+    margin-left: 15%;
+    height: 30px;
+}
+
+.answers_mbti_content {
+    width: 1000px;
+    margin-left: 15%;
+}
+
+#number_q {
+    width: 120px;
+    border-style: none;
+    color: #3D0539;
+    font-size: 22px;
+}
+
+#name_q {
+    margin-left: 25px;
+    width: auto;
+    padding-left: 5px;
+    border-style: none;
+    color: #3D0539;
+    font-size: 18px;
+}
+
+.mbti_content {
+    width: 1000px;
+    position: absolute;
+    left: 50%;
+    margin-left: -500px;
+    margin-top: 100px;
+}
+
+input[type="button"] {
+    width: 1200px;
+    border-radius: 10px; /* Уголки */
+    font-size: 16px;
+    margin-top: 8px;
+}
+
+#StartTestBtn {
+    width: 300px;
+    border-radius: 10px; /* Уголки */
+    font-size: 18px;
+    margin-left: 3%;
+}
+
+input[type="button"]:hover {
+    background-color: #F2ABED;
+}
+
+hr {
+    padding: 0;
+    height: 0;
+    border: none;
+    border-top: 2px solid black;
+    border-bottom: 2px solid #F2ABED;
+}

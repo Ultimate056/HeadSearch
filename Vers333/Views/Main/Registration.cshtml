@@ -1,0 +1,133 @@
+﻿@model Vers333.Models.ViewModels.UserViewModel
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>Регистрация</title>
+    <style>
+        * {
+            font-size: 18px;
+            font-family: Arial;
+        }
+        .content {
+            width: 800px;
+            position: absolute;
+            left: 42%;
+            margin-left: -200px;
+            margin-top: 100px;
+            border: thick double #32a1ce;
+        }
+
+        p {
+            margin-left: 5px;
+        }
+
+        h2 {
+            margin-left: 350px;
+            text-shadow: 2px 2px 4px rgba(179, 147, 211, 0.1),
+            3px 4px 4px rgba(179, 147, 211, 0.15), 
+            4px 6px 4px rgba(179, 147, 211, 0.2), 
+            5px 8px 4px rgba(179, 147, 211, 0.25);
+        }
+
+        #registrBtn {
+            margin-left: 250px;
+            border: 2px solid #32a1ce;
+        }
+
+        #BackToLogin {
+            border: 2px solid #d8c2ff;
+        }
+
+        img {
+            margin-left: 200px;
+        }
+
+        .field-validation-error {
+            color: #b94a48;
+        }
+
+        input.input-validation-error {
+            border: 1px solid #b94a48;
+        }
+
+        input.valid {
+            border: 1px solid #16a085;
+        }
+
+        .validation-summary-errors {
+            color: #b94a48;
+        }
+    </style>
+</head>
+<body>
+    <div class="content">
+        <img src="~/assets/logo.png"/>
+        <h2>Регистрация</h2>
+        <form method="post" asp-controller="Main" asp-action="AddUser">
+            <div asp-validation-summary="ModelOnly"></div>
+            <p>
+                <label asp-for="Email">Введите почту: </label>
+                <input type="Text" id="Email" asp-for="Email"/>
+                <span asp-validation-for="Email" />
+            </p>
+            <p>
+                <label asp-for="Password">Введите пароль: </label>
+                <input type="password" id="Password" asp-for="Password"/>
+                <span asp-validation-for="Password" />
+            </p>
+            <p>
+                <label asp-for="PasswordAgain">Введите пароль повторно: </label>
+                <input type="password" id="PasswordAgain" asp-for="PasswordAgain"/>
+                <span asp-validation-for="PasswordAgain" />
+            </p>
+            <p>
+                <label asp-for="SecondName">Фамилия: </label>
+                <input type="Text" id="SecondName" asp-for="SecondName" />
+                <span asp-validation-for="SecondName" />
+            </p>
+            <p>
+                <label asp-for="FirstName">Имя: </label>
+                <input type="Text" id="FirstName" asp-for="FirstName" />
+                <span asp-validation-for="FirstName" />
+            </p>
+            <p>
+                <label asp-for="ThirdName">Отчество: </label>
+                <input type="Text" id="ThirdName" asp-for="ThirdName" />
+                <span asp-validation-for="ThirdName" />
+            </p>
+
+            <p>
+                <label asp-for="PhoneNumber">Телефон: </label>
+                <input type="Text" id="PhoneNumber" asp-for="PhoneNumber" placeholder="+7(***)-***-**-**" />
+                <span asp-validation-for="PhoneNumber" />
+            </p>
+
+            <p>
+                <label asp-for="PlaceOfLife">Место проживания: </label>
+                <input type="Text" id="PlaceOfLife" asp-for="PlaceOfLife" />
+                <span asp-validation-for="PlaceOfLife" />
+            </p>
+
+            <p>
+                <input type="submit" value="Зарегистрироваться" id="registrBtn" /> | <input type="submit" value="Вернуться" id="BackToLogin" />
+            </p>
+        </form>
+            
+
+    </div>
+
+    <script src="https://ajax.aspnetcdn.com/ajax/jQuery/jquery-3.5.1.min.js"></script>
+    <script src="https://ajax.aspnetcdn.com/ajax/jquery.validate/1.17.0/jquery.validate.min.js"></script>
+    <script src="https://ajax.aspnetcdn.com/ajax/jquery.validation.unobtrusive/3.2.10/jquery.validate.unobtrusive.min.js"></script>
+
+    <script> 
+        document.getElementById("BackToLogin").addEventListener("click", async () => {
+            window.location.replace = '/';
+        });
+
+    </script>
+   
+</body>
+</html>
